@@ -1,0 +1,264 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Clock Component</title>
+        <link href='https://fonts.googleapis.com/css?family=Oranienbaum' rel='stylesheet' type='text/css'>
+        <template id="timeless-piece">
+            <style>
+                :host {
+                    display: inline-block;
+                    position: relative;
+                }
+            </style>
+            <timeless-face></timeless-face>
+            <timeless-hour></timeless-hour>
+            <timeless-minute></timeless-minute>
+            <timeless-second></timeless-second>
+        </template>
+        <template id="timeless-face">
+            <style>
+                .face {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 50%;
+                    font-family: Oranienbaum;
+                    box-shadow: 0px 0px 5px black;
+                }
+                .mark {
+                    position: absolute;
+                    width: 20%;
+                    height: 100%;
+                    text-align: center;
+                    left: 0;
+                    right: 0;
+                    margin: 0 auto 0 auto;
+                    font-size: 36px;
+                    letter-spacing: -5px;
+                    text-shadow: 0px 0px 1px rgba(0,0,0,0.4);
+                }
+                .mark:nth-child(2) {
+                    transform: rotate(30deg);
+                }
+                .mark:nth-child(3) {
+                    transform: rotate(60deg);
+                }
+                .mark:nth-child(4) {
+                    transform: rotate(90deg);
+                }
+                .mark:nth-child(5) {
+                    transform: rotate(120deg);
+                }
+                .mark:nth-child(6) {
+                    transform: rotate(150deg);
+                }
+                .mark:nth-child(7) {
+                    transform: rotate(180deg);
+                }
+                .mark:nth-child(8) {
+                    transform: rotate(210deg);
+                }
+                .mark:nth-child(9) {
+                    transform: rotate(240deg);
+                }
+                .mark:nth-child(10) {
+                    transform: rotate(270deg);
+                }
+                .mark:nth-child(11) {
+                    transform: rotate(300deg);
+                }
+                .mark:nth-child(12) {
+                    transform: rotate(330deg);
+                }
+            </style>
+            <div class="face">
+                <div class="mark">XII</div>
+                <div class="mark">I</div>
+                <div class="mark">II</div>
+                <div class="mark">III</div>
+                <div class="mark">IV</div>
+                <div class="mark">V</div>
+                <div class="mark">VI</div>
+                <div class="mark">VII</div>
+                <div class="mark">VIII</div>
+                <div class="mark">IX</div>
+                <div class="mark">X</div>
+                <div class="mark">XI</div>
+            </div>
+        </template>
+        <template id='timeless-second'>
+            <style>
+                .hand {
+                    position: absolute;
+                    display: inline-block;
+                    top: 5%;
+                    height: 45%;
+                    left: 0;
+                    right: 0;
+                    margin: 0 auto;
+                    width: 0.5%;
+                    background-color: red;
+                    box-shadow: 0px 0px 1px black;
+                    border-top-left-radius: 25%;
+                    border-top-right-radius: 25%;
+                    transform-origin: bottom;
+                }
+            </style>
+            <div class="hand"></div>
+        </template>
+        <template id='timeless-minute'>
+            <style>
+                .hand {
+                    position: absolute;
+                    display: inline-block;
+                    top: 5%;
+                    height: 45%;
+                    left: 0;
+                    right: 0;
+                    margin: 0 auto;
+                    width: 2%;
+                    background-color: black;
+                    box-shadow: 0px 0px 1px black;
+                    border-top-left-radius: 25%;
+                    border-top-right-radius: 25%;
+                    transform-origin: bottom;
+                }
+            </style>
+            <div class="hand"></div>
+        </template>
+        <template id='timeless-hour'>
+            <style>
+                .hand {
+                    position: absolute;
+                    display: inline-block;
+                    top: 15%;
+                    height: 35%;
+                    left: 0;
+                    right: 0;
+                    margin: 0 auto;
+                    width: 2%;
+                    background-color: black;
+                    box-shadow: 0px 0px 1px black;
+                    border-top-left-radius: 25%;
+                    border-top-right-radius: 25%;
+                    transform-origin: bottom;
+                }
+            </style>
+            <div class="hand"></div>
+        </template>
+        <script>
+            // Time Piece Component
+            var timelessPieceProto = Object.create(HTMLElement.prototype);
+
+            timelessPieceProto.createdCallback = function() {
+                var temp = document.querySelector('#timeless-piece');
+                var clone = document.importNode(temp.content, true);
+                this.createShadowRoot().appendChild(clone);
+                this.hour = this.shadowRoot.querySelector('timeless-hour');
+                this.minute = this.shadowRoot.querySelector('timeless-minute');
+                this.second = this.shadowRoot.querySelector('timeless-second');
+                this.tick();
+            };
+
+            timelessPieceProto.tick = function() {
+                var now = new Date();
+                var hours = now.getHours();
+                var minutes = now.getMinutes();
+                var seconds = now.getSeconds();
+                this.hour.setAttribute('hour', hours);
+                this.hour.setAttribute('minute', minutes);
+                this.minute.setAttribute('minute', minutes);
+                this.second.setAttribute('second', seconds);
+                setTimeout(this.tick.bind(this), 1000);
+            };
+
+            document.registerElement('timeless-piece', {prototype: timelessPieceProto});
+
+            // Time Face Component
+            var timelessFaceProto = Object.create(HTMLElement.prototype);
+
+            timelessFaceProto.createdCallback = function() {
+                var temp = document.querySelector('#timeless-face');
+                var clone = document.importNode(temp.content, true);
+                this.createShadowRoot().appendChild(clone);
+            };
+
+            document.registerElement('timeless-face', {prototype: timelessFaceProto});
+
+            // Time Second Component
+            var timelessSecondProto = Object.create(HTMLElement.prototype);
+
+            timelessSecondProto.createdCallback = function() {
+                var temp = document.querySelector('#timeless-second');
+                var clone = document.importNode(temp.content, true);
+                this.createShadowRoot().appendChild(clone);
+                this.hand = this.shadowRoot.querySelector('.hand');
+            };
+
+            timelessSecondProto.attributeChangedCallback = function(name, oldVal, newVal) {
+                if (name === 'second') {
+                    this.setSecond(newVal);
+                }
+            };
+
+            timelessSecondProto.setSecond = function(seconds) {
+                var deg = ((seconds % 60) / 60) * 360;
+                this.hand.style.transform = 'rotate(' + deg + 'deg)';
+            };
+
+            document.registerElement('timeless-second', {prototype: timelessSecondProto});
+
+            // Time Minute Component
+            var timelessMinuteProto = Object.create(HTMLElement.prototype);
+
+            timelessMinuteProto.createdCallback = function() {
+                var temp = document.querySelector('#timeless-minute');
+                var clone = document.importNode(temp.content, true);
+                this.createShadowRoot().appendChild(clone);
+                this.hand = this.shadowRoot.querySelector('.hand');
+            };
+
+            timelessMinuteProto.setMinute = function(minutes) {
+                var deg = ((minutes % 60) / 60) * 360;
+                this.hand.style.transform = 'rotate(' + deg + 'deg)';
+            };
+
+            timelessMinuteProto.attributeChangedCallback = function(name, oldVal, newVal) {
+                if (name === 'minute') {
+                    this.setMinute(newVal);
+                }
+            };
+
+            document.registerElement('timeless-minute', {prototype: timelessMinuteProto});
+
+            // Time Hour Component
+            var timelessHourProto = Object.create(HTMLElement.prototype);
+
+            timelessHourProto.createdCallback = function() {
+                var temp = document.querySelector('#timeless-hour');
+                var clone = document.importNode(temp.content, true);
+                this.createShadowRoot().appendChild(clone);
+                this.hand = this.shadowRoot.querySelector('.hand');
+            };
+
+            timelessHourProto.attributeChangedCallback = function(name, oldVal, newVal) {
+                if (name === 'minute') {
+                    this.setHour(this.getAttribute('hour'), newVal);
+                } else if (name === 'hour') {
+                    this.setHour(newVal, this.getAttribute('minute'));
+                }
+            };
+
+            timelessHourProto.setHour = function(hours, minutes) {
+                var hDeg = ((hours % 12) / 12) * 360;
+                var mDeg = ((minutes % 60) / 60) * 30;
+                var deg  = hDeg + mDeg;
+                this.hand.style.transform = 'rotate(' + deg + 'deg)';
+            };
+
+            document.registerElement('timeless-hour', {prototype: timelessHourProto});
+        </script>
+    </head>
+    <body>
+        <timeless-piece style="width: 250px; height: 250px;"></timeless-piece>
+    </body>
+</html>
