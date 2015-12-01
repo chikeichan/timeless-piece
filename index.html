@@ -4,9 +4,23 @@
         <title>Clock Component</title>
         <link href='https://fonts.googleapis.com/css?family=Oranienbaum' rel='stylesheet' type='text/css'>
         <link rel="import" href="./components/timeless-piece.html">
-
+        <style>
+            body {
+                background: #919083;
+                text-align: center;
+            }
+            timeless-piece {
+                width: 80vmin;
+                height: 80vmin;
+                border-radius: 50%;
+                background-color: #FFF7E5;
+                color: black;
+                border: 15px solid #5F2626;
+                box-shadow: 0px 0px 5px black;
+            }
+        </style>
     </head>
     <body>
-        <timeless-piece style="width: 250px; height: 250px;"></timeless-piece>
+        <timeless-piece></timeless-piece>
     </body>
 </html>
