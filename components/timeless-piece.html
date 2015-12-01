@@ -1,0 +1,46 @@
+<link rel="import" href="./timeless-face.html">
+<link rel="import" href="./timeless-hour.html">
+<link rel="import" href="./timeless-minute.html">
+<link rel="import" href="./timeless-second.html">
+<template id="timeless-piece">
+    <style>
+        :host {
+            display: inline-block;
+            position: relative;
+        }
+    </style>
+    <timeless-face></timeless-face>
+    <timeless-hour></timeless-hour>
+    <timeless-minute></timeless-minute>
+    <timeless-second></timeless-second>
+</template>
+<script>
+    (function() {
+        // Time Piece Component
+        var timelessPieceProto = Object.create(HTMLElement.prototype);
+        var temp = document.currentScript.ownerDocument.querySelector('#timeless-piece');
+
+        timelessPieceProto.createdCallback = function() {
+            var clone = document.importNode(temp.content, true);
+            this.createShadowRoot().appendChild(clone);
+            this.hour = this.shadowRoot.querySelector('timeless-hour');
+            this.minute = this.shadowRoot.querySelector('timeless-minute');
+            this.second = this.shadowRoot.querySelector('timeless-second');
+            this.tick();
+        };
+
+        timelessPieceProto.tick = function() {
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+            this.hour.setAttribute('hour', hours);
+            this.hour.setAttribute('minute', minutes);
+            this.minute.setAttribute('minute', minutes);
+            this.second.setAttribute('second', seconds);
+            setTimeout(this.tick.bind(this), 1000);
+        };
+
+        document.registerElement('timeless-piece', {prototype: timelessPieceProto});
+    })();
+</script>

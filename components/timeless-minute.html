@@ -1,0 +1,46 @@
+<template id='timeless-minute'>
+    <style>
+        .hand {
+            position: absolute;
+            display: inline-block;
+            top: 5%;
+            height: 45%;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            width: 2%;
+            background-color: black;
+            box-shadow: 0px 0px 1px black;
+            border-top-left-radius: 25%;
+            border-top-right-radius: 25%;
+            transform-origin: bottom;
+        }
+    </style>
+    <div class="hand"></div>
+</template>
+<script>
+    (function() {
+        // Time Minute Component
+        var timelessMinuteProto = Object.create(HTMLElement.prototype);
+        var temp = document.currentScript.ownerDocument.querySelector('#timeless-minute');
+
+        timelessMinuteProto.createdCallback = function() {
+            var clone = document.importNode(temp.content, true);
+            this.createShadowRoot().appendChild(clone);
+            this.hand = this.shadowRoot.querySelector('.hand');
+        };
+
+        timelessMinuteProto.setMinute = function(minutes) {
+            var deg = ((minutes % 60) / 60) * 360;
+            this.hand.style.transform = 'rotate(' + deg + 'deg)';
+        };
+
+        timelessMinuteProto.attributeChangedCallback = function(name, oldVal, newVal) {
+            if (name === 'minute') {
+                this.setMinute(newVal);
+            }
+        };
+
+        document.registerElement('timeless-minute', {prototype: timelessMinuteProto});
+    })();
+</script>

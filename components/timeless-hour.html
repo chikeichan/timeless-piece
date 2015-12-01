@@ -1,0 +1,50 @@
+<template id='timeless-hour'>
+    <style>
+        .hand {
+            position: absolute;
+            display: inline-block;
+            top: 15%;
+            height: 35%;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            width: 2%;
+            background-color: black;
+            box-shadow: 0px 0px 1px black;
+            border-top-left-radius: 25%;
+            border-top-right-radius: 25%;
+            transform-origin: bottom;
+        }
+    </style>
+    <div class="hand"></div>
+</template>
+<script>
+    (function() {
+        // Time Hour Component
+        var timelessHourProto = Object.create(HTMLElement.prototype);
+        var temp = document.currentScript.ownerDocument.querySelector('#timeless-hour');
+
+        timelessHourProto.createdCallback = function() {
+            var clone = document.importNode(temp.content, true);
+            this.createShadowRoot().appendChild(clone);
+            this.hand = this.shadowRoot.querySelector('.hand');
+        };
+
+        timelessHourProto.attributeChangedCallback = function(name, oldVal, newVal) {
+            if (name === 'minute') {
+                this.setHour(this.getAttribute('hour'), newVal);
+            } else if (name === 'hour') {
+                this.setHour(newVal, this.getAttribute('minute'));
+            }
+        };
+
+        timelessHourProto.setHour = function(hours, minutes) {
+            var hDeg = ((hours % 12) / 12) * 360;
+            var mDeg = ((minutes % 60) / 60) * 30;
+            var deg  = hDeg + mDeg;
+            this.hand.style.transform = 'rotate(' + deg + 'deg)';
+        };
+
+        document.registerElement('timeless-hour', {prototype: timelessHourProto});
+    })();
+</script>
